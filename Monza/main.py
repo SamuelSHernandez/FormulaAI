@@ -13,13 +13,14 @@ import neat
 pygame.font.init() # you have to call this at the start, if you want to use this module.
 font = pygame.font.SysFont('Arial', 30)
 pygame.display.set_caption("Monza AI")
-
-TRACK = pygame.image.load(os.path.join("Assets", "Monza.png"))
+TRACK = pygame.image.load(os.path.join("Assets", "Hmos_Rodriguez.png"))
 
 WIDTH = TRACK.get_width()
 HEIGHT = TRACK.get_height()
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 
+FPS = 28
+clock = pygame.time.Clock()
 class Car(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -27,16 +28,16 @@ class Car(pygame.sprite.Sprite):
             os.path.join("Assets", "ferrari641.png")
         )
         self.image = self.original_image
-        self.rect = self.image.get_rect(center=(650, 650))
-        self.vel_vector = pygame.math.Vector2(0.8, 0)
+        self.rect = self.image.get_rect(center=(650, 550))
+        self.vel_vector = pygame.math.Vector2(0.9, 0)
         self.angle = 0
-        self.rotation_vel = 4
+        self.corner_vel = 5
         self.direction = 0
-        self.alive = True
-        self.radars = []
+        self.on_track = True
+        self.sensors = []
 
     def update(self):
-        self.radars.clear()
+        self.sensors.clear()
         self.drive()
         self.rotate()
         for radar_angle in (-60, -30, 0, 30, 60):
@@ -62,7 +63,7 @@ class Car(pygame.sprite.Sprite):
         if SCREEN.get_at(collision_point_right) == pygame.Color(
             0, 108, 12, 255
         ) or SCREEN.get_at(collision_point_left) == pygame.Color(0, 108, 12, 255):
-            self.alive = False
+            self.on_track = False
 
         # Draw Collision Points
         pygame.draw.circle(SCREEN, (0, 255, 255, 0), collision_point_right, 4)
@@ -70,11 +71,11 @@ class Car(pygame.sprite.Sprite):
 
     def rotate(self):
         if self.direction == 1:
-            self.angle -= self.rotation_vel
-            self.vel_vector.rotate_ip(self.rotation_vel)
+            self.angle -= self.corner_vel
+            self.vel_vector.rotate_ip(self.corner_vel)
         if self.direction == -1:
-            self.angle += self.rotation_vel
-            self.vel_vector.rotate_ip(-self.rotation_vel)
+            self.angle += self.corner_vel
+            self.vel_vector.rotate_ip(-self.corner_vel)
 
         self.image = pygame.transform.rotozoom(self.original_image, self.angle, 0.1)
         self.rect = self.image.get_rect(center=self.rect.center)
@@ -108,11 +109,11 @@ class Car(pygame.sprite.Sprite):
             )
         )
 
-        self.radars.append([radar_angle, dist])
+        self.sensors.append([radar_angle, dist])
 
     def data(self):
         input = [0, 0, 0, 0, 0]
-        for i, radar in enumerate(self.radars):
+        for i, radar in enumerate(self.sensors):
             input[i] = int(radar[1])
         return input
 
@@ -139,8 +140,9 @@ def eval_genomes(genomes, config):
 
     run = True
     while run:
+        clock.tick(FPS)
         # gen_number = str(0)
-        my_text = 'Monza track'
+        my_text = 'track: Hermanos Rodriguez'
         text_surface = font.render(my_text, False, (0, 0, 0))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -155,7 +157,7 @@ def eval_genomes(genomes, config):
 
         for i, car in enumerate(cars):
             ge[i].fitness += 1
-            if not car.sprite.alive:
+            if not car.sprite.on_track:
                 remove(i)
 
         for i, car in enumerate(cars):
@@ -189,7 +191,7 @@ def run(config_path):
     stats = neat.StatisticsReporter()
     pop.add_reporter(stats)
 
-    pop.run(eval_genomes, 50)
+    pop.run(eval_genomes, 500)
 
 
 if __name__ == "__main__":
