@@ -1,6 +1,6 @@
 # FormulaAI
 
-![Formula AI](/assets/formulaAI-thumbnail.png "Formula AI")
+![Formula AI](assets/formulaAI-thumbnail.png "Formula AI")
 
 Reinforced Learning algorithm to teach a car how to go around a track
 
