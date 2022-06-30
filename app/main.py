@@ -25,7 +25,7 @@ curr_track = tracks[track_id]
 
 pygame.font.init() # you have to call this at the start, if you want to use this module.
 font = pygame.font.SysFont('Arial', 30)
-pygame.display.set_caption("Monza AI")
+pygame.display.set_caption("Formula AI")
 TRACK = pygame.image.load(os.path.join("../assets", curr_track+'.png'))
 
 
