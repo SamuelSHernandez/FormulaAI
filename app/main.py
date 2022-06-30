@@ -4,12 +4,8 @@ import math
 import sys
 import neat
 
-# Reference: 
-# https://github.com/codewmax/DriveAI/blob/master/main.py
-# https://stackoverflow.com/questions/20842801/how-to-display-text-in-pygame
-# https://www.youtube.com/watch?v=V_B5ZCli-rA&list=RDCMUC4JX40jDee_tINbkjycV4Sg&index=3&ab_channel=TechWithTim
 
-track_id = 1
+track_id = 3
 
 tracks = {
     0 : "AutonomoHermanosRodriguez",
