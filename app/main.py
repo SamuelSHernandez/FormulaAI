@@ -1,32 +1,33 @@
-import pygame
-import os
 import math
+import os
 import sys
+
 import neat
+import pygame
 
-
-track_id = 3
+track_id = 2    # Select a track
 
 tracks = {
-    0 : "AutonomoHermanosRodriguez",
-    1 : "CircuitOfTheAmericas",
-    2 : "Monaco",
-    3 : "Monza",
-    }
+    0: "AutonomoHermanosRodriguez",
+    1: "CircuitOfTheAmericas",
+    2: "Monaco",
+    3: "Monza",
+}
 
 start_pos = {
-    0 : (300, 920),
-    1 : (270, 930), 
-    2 : (270, 570),
-    3 : (570, 805),
+    0: (300, 920),
+    1: (270, 930),
+    2: (280, 570),
+    3: (570, 805),
 }
 
 curr_track = tracks[track_id]
 
-pygame.font.init() # you have to call this at the start, if you want to use this module.
-font = pygame.font.SysFont('Arial', 30)
+# you have to call this at the start, if you want to use this module.
+pygame.font.init()
+font = pygame.font.SysFont("Arial", 30)
 pygame.display.set_caption("Formula AI")
-TRACK = pygame.image.load(os.path.join("../assets", curr_track+'.png'))
+TRACK = pygame.image.load(os.path.join("../assets", curr_track + ".png"))
 
 
 WIDTH = TRACK.get_width()
@@ -35,6 +36,8 @@ SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 
 FPS = 28
 clock = pygame.time.Clock()
+
+
 class Car(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -132,11 +135,11 @@ class Car(pygame.sprite.Sprite):
         return input
 
 
-
 def remove(index):
     cars.pop(index)
     ge.pop(index)
     nets.pop(index)
+
 
 def eval_genomes(genomes, config):
     global cars, ge, nets
@@ -155,16 +158,18 @@ def eval_genomes(genomes, config):
     run = True
     while run:
         clock.tick(FPS)
-        # gen_number = str(0)
-        my_text = (f'track: {curr_track}')
-        text_surface = font.render(my_text, False, (0, 0, 0))
+        my_text = f"track: {curr_track}"
+        str_genome_id = f"genome id: {str(genome_id)}"
+        text_surface_name = font.render(my_text, False, (0, 0, 0))
+        text_surface_genome = font.render(str_genome_id, False, (0, 0, 0))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
         SCREEN.blit(TRACK, (0, 0))
-        SCREEN.blit(text_surface, (0,0))
+        SCREEN.blit(text_surface_name, (0, 0))
+        SCREEN.blit(text_surface_genome, (0, 25))
 
         if len(cars) == 0:
             break
@@ -188,6 +193,7 @@ def eval_genomes(genomes, config):
             car.draw(SCREEN)
             car.update()
         pygame.display.update()
+
 
 def run(config_path):
     # Setup NEAT Neural Network
