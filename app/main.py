@@ -109,6 +109,9 @@ class Car(pygame.sprite.Sprite):
         pygame.draw.circle(SCREEN, (0, 255, 255, 0), collision_point_left, 4)
 
     def rotate(self):
+        """
+        rotates car
+        """
         if self.direction == 1:
             self.angle -= self.corner_vel
             self.vel_vector.rotate_ip(self.corner_vel)
@@ -120,6 +123,9 @@ class Car(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=self.rect.center)
 
     def radar(self, radar_angle):
+        """
+        this method simulates the distance from the car to the edge of the track
+        """
         length = 0
         x = int(self.rect.center[0])
         y = int(self.rect.center[1])
@@ -151,6 +157,10 @@ class Car(pygame.sprite.Sprite):
         self.sensors.append([radar_angle, dist])
 
     def data(self):
+        """
+        stores the radar data
+        
+        """
         input = [0, 0, 0, 0, 0]
         for i, radar in enumerate(self.sensors):
             input[i] = int(radar[1])
@@ -158,12 +168,20 @@ class Car(pygame.sprite.Sprite):
 
 
 def remove(index):
+    """
+    In the event of a fatal collision, this method removes the car off the track
+
+    """
     cars.pop(index)
     ge.pop(index)
     nets.pop(index)
 
 
 def eval_genomes(genomes, config):
+    """
+    evaluates which genome is best fit for the track
+
+    """
     global cars, ge, nets
 
     cars = []
@@ -218,6 +236,10 @@ def eval_genomes(genomes, config):
 
 
 def run(config_path):
+    """
+    run the car
+
+    """
     # Setup NEAT Neural Network
     config = neat.config.Config(
         neat.DefaultGenome,
