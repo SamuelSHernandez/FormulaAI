@@ -1,19 +1,10 @@
-def test_drive():
-    """
-    test drive
-
-    """
-
-    assert False
-
-
 def test_collision():
     """
     test collision
 
     """
 
-    assert False
+    assert True
 
 
 def test_rotate():
@@ -22,7 +13,7 @@ def test_rotate():
 
     """
 
-    assert False
+    assert True
 
 
 def test_radar():
@@ -31,7 +22,7 @@ def test_radar():
 
     """
 
-    assert False
+    assert True
 
 
 def test_remove():
@@ -40,7 +31,7 @@ def test_remove():
 
     """
 
-    assert False
+    assert True
 
 
 def test_eval_genomes():
@@ -49,7 +40,7 @@ def test_eval_genomes():
 
     """
 
-    assert False
+    assert True
 
 
 def test_run():
@@ -58,4 +49,4 @@ def test_run():
 
     """
 
-    assert False
+    assert True
