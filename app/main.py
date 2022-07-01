@@ -13,29 +13,28 @@ import sys
 import neat
 import pygame
 
-TRACK_ID = 2  # Select a track
+TRACK_ID = 0    # Select a track
 
 tracks = {
-    0: "AutonomoHermanosRodriguez",
-    1: "CircuitOfTheAmericas",
-    2: "Monaco",
-    3: "Monza",
-}
+    0 : "AutonomoHermanosRodriguez",
+    1 : "CircuitOfTheAmericas",
+    2 : "Monaco",
+    3 : "Monza",
+    }
 
 start_pos = {
-    0: (300, 920),
-    1: (270, 930),
-    2: (280, 570),
-    3: (570, 805),
+    0 : (300, 920),
+    1 : (270, 930), 
+    2 : (270, 570),
+    3 : (570, 805),
 }
 
 CURR_TRACK = tracks[TRACK_ID]
 
-# you have to call this at the start, if you want to use this module.
-pygame.font.init()
-font = pygame.font.SysFont("Arial", 30)
-pygame.display.set_caption("Formula AI")
-TRACK = pygame.image.load(os.path.join("../assets", CURR_TRACK + ".png"))
+pygame.font.init() # you have to call this at the start, if you want to use this module.
+font = pygame.font.SysFont('Arial', 30)
+pygame.display.set_caption("Monza AI")
+TRACK = pygame.image.load(os.path.join("../assets", CURR_TRACK+'.png'))
 
 
 WIDTH = TRACK.get_width()
@@ -44,21 +43,21 @@ SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 
 FPS = 28
 clock = pygame.time.Clock()
-
-
-class Car(pygame.sprite.Sprite):
+class Car(pygame.sprite.Sprite):    
     """
-    Runs the main logic behind a car's navigation
+    "Car"
 
     """
-
     def __init__(self):
         super().__init__()
-        self.image = self.pygame.image.load(os.path.join("../assets", "ferrari641.png"))
+        self.original_image = pygame.image.load(
+            os.path.join("../assets", "ferrari641.png")
+        )
+        self.image = self.original_image
         self.rect = self.image.get_rect(center=start_pos[TRACK_ID])
         self.vel_vector = pygame.math.Vector2(0.65, 0)
         self.angle = 0
-        self.corner_vel = 6
+        self.corner_vel = 5
         self.direction = 0
         self.on_track = True
         self.sensors = []
@@ -159,7 +158,7 @@ class Car(pygame.sprite.Sprite):
     def data(self):
         """
         stores the radar data
-        
+
         """
         input = [0, 0, 0, 0, 0]
         for i, radar in enumerate(self.sensors):
