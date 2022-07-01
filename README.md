@@ -6,9 +6,9 @@ Reinforced Learning algorithm to teach a car how to go around a track
 
 ## Getting started
 
-First, in [main.py](app/main.py) you can select which track to test by selecting a **track_id**.
+First, in [main.py](app/main.py) you can select which track to test by selecting a **TRACK_ID**.
 
-| **track id**  | **track name**               |
+| **track ID**  | **track name**               |
 |-------------- |----------------------------- |
 | 0             | Autonomo Hermanos Rodriguez  |
 | 1             | Circuit of the Americas      |

@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+    Formula AI
+
+"""
+
 import math
 import os
 import sys
@@ -5,7 +13,7 @@ import sys
 import neat
 import pygame
 
-TRACK_ID = 2    # Select a track
+TRACK_ID = 2  # Select a track
 
 tracks = {
     0: "AutonomoHermanosRodriguez",
@@ -41,13 +49,12 @@ clock = pygame.time.Clock()
 class Car(pygame.sprite.Sprite):
     """
     Runs the main logic behind a car's navigation
+
     """
 
     def __init__(self):
         super().__init__()
-        self.image = self.pygame.image.load(
-            os.path.join("../assets", "ferrari641.png")
-            )
+        self.image = self.pygame.image.load(os.path.join("../assets", "ferrari641.png"))
         self.rect = self.image.get_rect(center=start_pos[TRACK_ID])
         self.vel_vector = pygame.math.Vector2(0.65, 0)
         self.angle = 0
@@ -57,9 +64,9 @@ class Car(pygame.sprite.Sprite):
         self.sensors = []
 
     def update(self):
-        """        
+        """
         updates the car's heading based on the radar inputs
-        
+
         """
         self.sensors.clear()
         self.drive()
@@ -70,21 +77,25 @@ class Car(pygame.sprite.Sprite):
         self.data()
 
     def drive(self):
+        """
+        keeps the car straight
+
+        """
         self.rect.center += self.vel_vector * 6
 
     def collision(self):
+        """
+        In the event of a crash, this method simulates the collision
+
+        """
         length = 40
         collision_point_right = [
-            int(self.rect.center[0] +
-                math.cos(math.radians(self.angle + 18)) * length),
-            int(self.rect.center[1] -
-                math.sin(math.radians(self.angle + 18)) * length),
+            int(self.rect.center[0] + math.cos(math.radians(self.angle + 18)) * length),
+            int(self.rect.center[1] - math.sin(math.radians(self.angle + 18)) * length),
         ]
         collision_point_left = [
-            int(self.rect.center[0] +
-                math.cos(math.radians(self.angle - 18)) * length),
-            int(self.rect.center[1] -
-                math.sin(math.radians(self.angle - 18)) * length),
+            int(self.rect.center[0] + math.cos(math.radians(self.angle - 18)) * length),
+            int(self.rect.center[1] - math.sin(math.radians(self.angle - 18)) * length),
         ]
 
         # Die on Collision
@@ -105,8 +116,7 @@ class Car(pygame.sprite.Sprite):
             self.angle += self.corner_vel
             self.vel_vector.rotate_ip(-self.corner_vel)
 
-        self.image = pygame.transform.rotozoom(
-            self.original_image, self.angle, 0.1)
+        self.image = pygame.transform.rotozoom(self.original_image, self.angle, 0.1)
         self.rect = self.image.get_rect(center=self.rect.center)
 
     def radar(self, radar_angle):
@@ -115,8 +125,7 @@ class Car(pygame.sprite.Sprite):
         y = int(self.rect.center[1])
 
         while (
-            not SCREEN.get_at((x, y)) == pygame.Color(
-                0, 108, 12, 255) and length < 70
+            not SCREEN.get_at((x, y)) == pygame.Color(0, 108, 12, 255) and length < 70
         ):
             length += 1
             x = int(
@@ -129,8 +138,7 @@ class Car(pygame.sprite.Sprite):
             )
 
         # Draw Radar
-        pygame.draw.line(SCREEN, (255, 255, 255, 255),
-                         self.rect.center, (x, y), 1)
+        pygame.draw.line(SCREEN, (255, 255, 255, 255), self.rect.center, (x, y), 1)
         pygame.draw.circle(SCREEN, (0, 255, 0, 0), (x, y), 3)
 
         dist = int(
