@@ -25,9 +25,5 @@ class MainTest(unittest.TestCase):
         else:
             assert False
 
-    def test_track_image(self):
-        self.assertEquals(WIDTH, 1238)
-        self.assertEquals(HEIGHT, 1033)
-
     def test_fps(self):
         self.assertEquals(FPS, 28)
