@@ -13,6 +13,8 @@ import sys
 import neat
 import pygame
 
+os.environ["SDL_VIDEODRIVER"] = "dummy"
+
 TRACK_ID = 0  # Select a track
 
 tracks = {
