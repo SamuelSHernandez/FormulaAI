@@ -13,41 +13,45 @@ import sys
 import neat
 import pygame
 
-TRACK_ID = 0    # Select a track
+TRACK_ID = 0  # Select a track
 
 tracks = {
-    0 : "AutonomoHermanosRodriguez",
-    1 : "CircuitOfTheAmericas",
-    2 : "Monaco",
-    3 : "Monza",
-    }
+    0: "AutonomoHermanosRodriguez",
+    1: "CircuitOfTheAmericas",
+    2: "Monaco",
+    3: "Monza",
+}
 
 start_pos = {
-    0 : (300, 920),
-    1 : (270, 930), 
-    2 : (270, 570),
-    3 : (570, 805),
+    0: (300, 920),
+    1: (270, 930),
+    2: (270, 570),
+    3: (570, 805),
 }
 
 CURR_TRACK = tracks[TRACK_ID]
 
-pygame.font.init() # you have to call this at the start, if you want to use this module.
-font = pygame.font.SysFont('Arial', 30)
-pygame.display.set_caption("Monza AI")
-TRACK = pygame.image.load(os.path.join("../assets", CURR_TRACK+'.png'))
+pygame.font.init()  # you have to call this at the start, if you want to use this module.
+font = pygame.font.SysFont("Arial", 30)
+pygame.display.set_caption("Formula AI")
+TRACK = pygame.image.load(os.path.join("../assets", CURR_TRACK + ".png"))
 
 
 WIDTH = TRACK.get_width()
 HEIGHT = TRACK.get_height()
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
+print(WIDTH, HEIGHT)
 
 FPS = 28
 clock = pygame.time.Clock()
-class Car(pygame.sprite.Sprite):    
+
+
+class Car(pygame.sprite.Sprite):
     """
     "Car"
 
     """
+
     def __init__(self):
         super().__init__()
         self.original_image = pygame.image.load(

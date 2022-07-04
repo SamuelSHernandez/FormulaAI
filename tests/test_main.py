@@ -1,52 +1,33 @@
-def test_collision():
-    """
-    test collision
+import unittest
 
-    """
-
-    assert True
+from app.main import CURR_TRACK, FPS, HEIGHT, TRACK_ID, WIDTH
 
 
-def test_rotate():
-    """
-    test rotate
+class MainTest(unittest.TestCase):
+    def test_track_id(self):
+        """
+        test collision
 
-    """
+        """
 
-    assert True
+        if TRACK_ID == 0:
+            self.assertEquals(CURR_TRACK, "AutonomoHermanosRodriguez")
 
+        elif TRACK_ID == 1:
+            self.assertEquals(CURR_TRACK, "CircuitOfTheAmericas")
 
-def test_radar():
-    """
-    test radar
+        elif TRACK_ID == 2:
+            self.assertEquals(CURR_TRACK, "Monaco")
 
-    """
+        elif TRACK_ID == 3:
+            self.assertEquals(CURR_TRACK, "Monza")
 
-    assert True
+        else:
+            assert False
 
+    def test_track_image(self):
+        self.assertEquals(WIDTH, 1238)
+        self.assertEquals(HEIGHT, 1033)
 
-def test_remove():
-    """
-    test remove
-
-    """
-
-    assert True
-
-
-def test_eval_genomes():
-    """
-    test evaluate genomes
-
-    """
-
-    assert True
-
-
-def test_run():
-    """
-    test run
-
-    """
-
-    assert True
+    def test_fps(self):
+        self.assertEquals(FPS, 28)
