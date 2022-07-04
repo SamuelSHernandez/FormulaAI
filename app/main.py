@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+    Formula AI
+
+"""
+
 import math
 import os
 import sys
@@ -5,7 +13,9 @@ import sys
 import neat
 import pygame
 
-TRACK_ID = 2    # Select a track
+os.environ["SDL_VIDEODRIVER"] = "dummy"  # Resolves pipeline error
+
+TRACK_ID = 0  # Select a track
 
 tracks = {
     0: "AutonomoHermanosRodriguez",
@@ -17,22 +27,22 @@ tracks = {
 start_pos = {
     0: (300, 920),
     1: (270, 930),
-    2: (280, 570),
+    2: (270, 570),
     3: (570, 805),
 }
 
 CURR_TRACK = tracks[TRACK_ID]
 
-# you have to call this at the start, if you want to use this module.
-pygame.font.init()
+pygame.font.init()  # you have to call this at the start, if you want to use this module.
 font = pygame.font.SysFont("Arial", 30)
 pygame.display.set_caption("Formula AI")
-TRACK = pygame.image.load(os.path.join("../assets", CURR_TRACK + ".png"))
+TRACK = pygame.image.load(os.path.join("assets", CURR_TRACK + ".png"))
 
 
 WIDTH = TRACK.get_width()
 HEIGHT = TRACK.get_height()
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
+print(WIDTH, HEIGHT)
 
 FPS = 28
 clock = pygame.time.Clock()
@@ -40,26 +50,28 @@ clock = pygame.time.Clock()
 
 class Car(pygame.sprite.Sprite):
     """
-    Runs the main logic behind a car's navigation
+    "Car"
+
     """
 
     def __init__(self):
         super().__init__()
-        self.image = self.pygame.image.load(
-            os.path.join("../assets", "ferrari641.png")
-            )
+        self.original_image = pygame.image.load(
+            os.path.join("assets", "ferrari641.png")
+        )
+        self.image = self.original_image
         self.rect = self.image.get_rect(center=start_pos[TRACK_ID])
         self.vel_vector = pygame.math.Vector2(0.65, 0)
         self.angle = 0
-        self.corner_vel = 6
+        self.corner_vel = 5
         self.direction = 0
         self.on_track = True
         self.sensors = []
 
     def update(self):
-        """        
+        """
         updates the car's heading based on the radar inputs
-        
+
         """
         self.sensors.clear()
         self.drive()
@@ -70,21 +82,25 @@ class Car(pygame.sprite.Sprite):
         self.data()
 
     def drive(self):
+        """
+        keeps the car straight
+
+        """
         self.rect.center += self.vel_vector * 6
 
     def collision(self):
+        """
+        In the event of a crash, this method simulates the collision
+
+        """
         length = 40
         collision_point_right = [
-            int(self.rect.center[0] +
-                math.cos(math.radians(self.angle + 18)) * length),
-            int(self.rect.center[1] -
-                math.sin(math.radians(self.angle + 18)) * length),
+            int(self.rect.center[0] + math.cos(math.radians(self.angle + 18)) * length),
+            int(self.rect.center[1] - math.sin(math.radians(self.angle + 18)) * length),
         ]
         collision_point_left = [
-            int(self.rect.center[0] +
-                math.cos(math.radians(self.angle - 18)) * length),
-            int(self.rect.center[1] -
-                math.sin(math.radians(self.angle - 18)) * length),
+            int(self.rect.center[0] + math.cos(math.radians(self.angle - 18)) * length),
+            int(self.rect.center[1] - math.sin(math.radians(self.angle - 18)) * length),
         ]
 
         # Die on Collision
@@ -98,6 +114,9 @@ class Car(pygame.sprite.Sprite):
         pygame.draw.circle(SCREEN, (0, 255, 255, 0), collision_point_left, 4)
 
     def rotate(self):
+        """
+        rotates car
+        """
         if self.direction == 1:
             self.angle -= self.corner_vel
             self.vel_vector.rotate_ip(self.corner_vel)
@@ -105,18 +124,19 @@ class Car(pygame.sprite.Sprite):
             self.angle += self.corner_vel
             self.vel_vector.rotate_ip(-self.corner_vel)
 
-        self.image = pygame.transform.rotozoom(
-            self.original_image, self.angle, 0.1)
+        self.image = pygame.transform.rotozoom(self.original_image, self.angle, 0.1)
         self.rect = self.image.get_rect(center=self.rect.center)
 
     def radar(self, radar_angle):
+        """
+        this method simulates the distance from the car to the edge of the track
+        """
         length = 0
         x = int(self.rect.center[0])
         y = int(self.rect.center[1])
 
         while (
-            not SCREEN.get_at((x, y)) == pygame.Color(
-                0, 108, 12, 255) and length < 70
+            not SCREEN.get_at((x, y)) == pygame.Color(0, 108, 12, 255) and length < 70
         ):
             length += 1
             x = int(
@@ -129,8 +149,7 @@ class Car(pygame.sprite.Sprite):
             )
 
         # Draw Radar
-        pygame.draw.line(SCREEN, (255, 255, 255, 255),
-                         self.rect.center, (x, y), 1)
+        pygame.draw.line(SCREEN, (255, 255, 255, 255), self.rect.center, (x, y), 1)
         pygame.draw.circle(SCREEN, (0, 255, 0, 0), (x, y), 3)
 
         dist = int(
@@ -143,6 +162,10 @@ class Car(pygame.sprite.Sprite):
         self.sensors.append([radar_angle, dist])
 
     def data(self):
+        """
+        stores the radar data
+
+        """
         input = [0, 0, 0, 0, 0]
         for i, radar in enumerate(self.sensors):
             input[i] = int(radar[1])
@@ -150,12 +173,20 @@ class Car(pygame.sprite.Sprite):
 
 
 def remove(index):
+    """
+    In the event of a fatal collision, this method removes the car off the track
+
+    """
     cars.pop(index)
     ge.pop(index)
     nets.pop(index)
 
 
 def eval_genomes(genomes, config):
+    """
+    evaluates which genome is best fit for the track
+
+    """
     global cars, ge, nets
 
     cars = []
@@ -210,6 +241,10 @@ def eval_genomes(genomes, config):
 
 
 def run(config_path):
+    """
+    run the car
+
+    """
     # Setup NEAT Neural Network
     config = neat.config.Config(
         neat.DefaultGenome,
