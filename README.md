@@ -18,7 +18,7 @@ First, in [main.py](app/main.py) you can select which track to test by selecting
 Make sure you already installed all the project dependencies. Now, run the following command from **/FormulaAI**:
 
 ```{python}
-cd app && python3 main.py
+python3 app/main.py
 ```
 
 ## Reference

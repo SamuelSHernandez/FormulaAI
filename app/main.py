@@ -34,7 +34,7 @@ CURR_TRACK = tracks[TRACK_ID]
 pygame.font.init()  # you have to call this at the start, if you want to use this module.
 font = pygame.font.SysFont("Arial", 30)
 pygame.display.set_caption("Formula AI")
-TRACK = pygame.image.load(os.path.join("../assets", CURR_TRACK + ".png"))
+TRACK = pygame.image.load(os.path.join("assets", CURR_TRACK + ".png"))
 
 
 WIDTH = TRACK.get_width()
@@ -55,7 +55,7 @@ class Car(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.original_image = pygame.image.load(
-            os.path.join("../assets", "ferrari641.png")
+            os.path.join("assets", "ferrari641.png")
         )
         self.image = self.original_image
         self.rect = self.image.get_rect(center=start_pos[TRACK_ID])
