@@ -12,7 +12,6 @@ import sys
 
 import neat
 import pygame
-from pygame.locals import *
 
 TRACK_ID = 0  # Select a track
 
