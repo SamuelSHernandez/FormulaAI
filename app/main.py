@@ -42,7 +42,6 @@ TRACK = pygame.image.load(os.path.join("assets", CURR_TRACK + ".png"))
 WIDTH = TRACK.get_width()
 HEIGHT = TRACK.get_height()
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
-print(WIDTH, HEIGHT)
 
 FPS = 28
 clock = pygame.time.Clock()
