@@ -1,7 +1,5 @@
 import unittest
 
-from pygame.locals import *
-
 from app.main import CURR_TRACK, FPS, TRACK_ID
 
 
