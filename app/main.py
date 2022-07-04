@@ -13,9 +13,10 @@ import sys
 import neat
 import pygame
 
+# Uncomment the line below to see the program run.
 os.environ["SDL_VIDEODRIVER"] = "dummy"  # Resolves pipeline error
 
-TRACK_ID = 0  # Select a track
+TRACK_ID = 3  # Select a track
 
 tracks = {
     0: "AutonomoHermanosRodriguez",
@@ -60,7 +61,7 @@ class Car(pygame.sprite.Sprite):
         )
         self.image = self.original_image
         self.rect = self.image.get_rect(center=start_pos[TRACK_ID])
-        self.vel_vector = pygame.math.Vector2(0.65, 0)
+        self.vel_vector = pygame.math.Vector2(0.7, 0)
         self.angle = 0
         self.corner_vel = 5
         self.direction = 0
