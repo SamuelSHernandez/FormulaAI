@@ -1,6 +1,6 @@
 import unittest
 
-from app.main import CURR_TRACK, FPS, HEIGHT, TRACK_ID, WIDTH
+from app.main import CURR_TRACK, FPS, TRACK_ID
 
 
 class MainTest(unittest.TestCase):
