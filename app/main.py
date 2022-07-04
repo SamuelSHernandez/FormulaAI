@@ -13,7 +13,7 @@ import sys
 import neat
 import pygame
 
-os.environ["SDL_VIDEODRIVER"] = "dummy"
+os.environ["SDL_VIDEODRIVER"] = "dummy"  # Resolves pipeline error
 
 TRACK_ID = 0  # Select a track
 
