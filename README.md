@@ -15,7 +15,7 @@ First, in [main.py](app/main.py) you can select which track to test by selecting
 | 2             | Monaco                       |
 | 3             | Monza                        |
 
-Make sure you already installed all the project dependencies. Now, run the following command from **/FormulaAI**:
+Make sure you already installed all the project dependencies. Now, run the following command from your root directory:
 
 ```{python}
 python3 app/main.py
