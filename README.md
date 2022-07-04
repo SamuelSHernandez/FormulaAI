@@ -23,6 +23,6 @@ python3 app/main.py
 
 ## Reference
 
-- [Feed-forward neural net](https://github.com/codewmax/DriveAI/blob/master/main.py)
+- [Feed-forward algorithm for racing game](https://github.com/codewmax/DriveAI/blob/master/main.py)
 - [Displaying text in a pygame window](https://stackoverflow.com/questions/20842801/how-to-display-text-in-pygame)
 - [Driving a car using the pygame library](https://www.youtube.com/watch?v=V_B5ZCli-rA&list=RDCMUC4JX40jDee_tINbkjycV4Sg&index=3&ab_channel=TechWithTim)
