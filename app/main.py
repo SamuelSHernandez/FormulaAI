@@ -6,6 +6,7 @@
 
 """
 
+
 import math
 import os
 import sys
@@ -14,7 +15,7 @@ import neat
 import pygame
 
 # Uncomment the line below to see the program run.
-os.environ["SDL_VIDEODRIVER"] = "dummy"  # Resolves pipeline error
+# os.environ["SDL_VIDEODRIVER"] = "dummy"  # Resolves pipeline error
 
 TRACK_ID = 3  # Select a track
 
@@ -29,7 +30,7 @@ start_pos = {
     0: (300, 920),
     1: (270, 930),
     2: (270, 570),
-    3: (570, 805),
+    3: (570, 790),
 }
 
 CURR_TRACK = tracks[TRACK_ID]
@@ -37,7 +38,7 @@ CURR_TRACK = tracks[TRACK_ID]
 pygame.font.init()  # you have to call this at the start, if you want to use this module.
 font = pygame.font.SysFont("Arial", 30)
 pygame.display.set_caption("Formula AI")
-TRACK = pygame.image.load(os.path.join("assets", CURR_TRACK + ".png"))
+TRACK = pygame.image.load("/Users/samuel.hernandez/FormulaAI/assets/Monza_.png")
 
 
 WIDTH = TRACK.get_width()
@@ -57,16 +58,19 @@ class Car(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.original_image = pygame.image.load(
-            os.path.join("assets", "ferrari641.png")
+            "/Users/samuel.hernandez/FormulaAI/assets/ferrari641.png"
         )
         self.image = self.original_image
         self.rect = self.image.get_rect(center=start_pos[TRACK_ID])
-        self.vel_vector = pygame.math.Vector2(0.7, 0)
+        self.vel_vector = pygame.math.Vector2(0.6, 0) # 1.2
         self.angle = 0
-        self.corner_vel = 5
+        self.corner_vel = 9
         self.direction = 0
         self.on_track = True
         self.sensors = []
+        self.laps = 0
+        self.has_crossed_line  = False
+        self.first_lap = True
 
     def update(self):
         """
@@ -76,24 +80,39 @@ class Car(pygame.sprite.Sprite):
         self.sensors.clear()
         self.drive()
         self.rotate()
-        for radar_angle in (-60, -30, 0, 30, 60):
+        for radar_angle in (-135, -25, 0, 25, 135):
             self.radar(radar_angle)
         self.collision()
         self.data()
+        self.check_lap()
+
+    def check_lap(self):
+            start_x, start_y = start_pos[TRACK_ID]
+            car_x, car_y = self.rect.center
+            distance_to_start = math.sqrt((start_x - car_x) ** 2 + (start_y - car_y) ** 2)
+            if distance_to_start < 30:
+                if not self.has_crossed_line:
+                    if not self.first_lap:
+                        self.laps += 1
+                    else:
+                        self.first_lap = False
+                    self.has_crossed_line = True
+            else:
+                self.has_crossed_line = False
 
     def drive(self):
         """
         keeps the car straight
 
         """
-        self.rect.center += self.vel_vector * 6
+        self.rect.center += self.vel_vector * 8
 
     def collision(self):
         """
         In the event of a crash, this method simulates the collision
 
         """
-        length = 40
+        length = 10
         collision_point_right = [
             int(self.rect.center[0] + math.cos(math.radians(self.angle + 18)) * length),
             int(self.rect.center[1] - math.sin(math.radians(self.angle + 18)) * length),
@@ -110,8 +129,8 @@ class Car(pygame.sprite.Sprite):
             self.on_track = False
 
         # Draw Collision Points
-        pygame.draw.circle(SCREEN, (0, 255, 255, 0), collision_point_right, 4)
-        pygame.draw.circle(SCREEN, (0, 255, 255, 0), collision_point_left, 4)
+        pygame.draw.circle(SCREEN, (0, 255, 255, 0), collision_point_right, 2)
+        pygame.draw.circle(SCREEN, (0, 255, 255, 0), collision_point_left, 2)
 
     def rotate(self):
         """
@@ -135,9 +154,7 @@ class Car(pygame.sprite.Sprite):
         x = int(self.rect.center[0])
         y = int(self.rect.center[1])
 
-        while (
-            not SCREEN.get_at((x, y)) == pygame.Color(0, 108, 12, 255) and length < 70
-        ):
+        while SCREEN.get_at((x, y)) != pygame.Color(0, 108, 12, 255) and length < 60:
             length += 1
             x = int(
                 self.rect.center[0]
@@ -166,10 +183,10 @@ class Car(pygame.sprite.Sprite):
         stores the radar data
 
         """
-        input = [0, 0, 0, 0, 0]
+        input_ = [0, 0, 0, 0, 0]
         for i, radar in enumerate(self.sensors):
-            input[i] = int(radar[1])
-        return input
+            input_[i] = int(radar[1])
+        return input_
 
 
 def remove(index):
@@ -192,6 +209,7 @@ def eval_genomes(genomes, config):
     cars = []
     ge = []
     nets = []
+    reward_laps = 2  # set the laps for reward
 
     for genome_id, genome in genomes:
         cars.append(pygame.sprite.GroupSingle(Car()))
@@ -203,10 +221,13 @@ def eval_genomes(genomes, config):
     run = True
     while run:
         clock.tick(FPS)
-        my_text = f"track: {CURR_TRACK}"
-        str_genome_id = f"genome id: {str(genome_id)}"
-        text_surface_name = font.render(my_text, False, (0, 0, 0))
-        text_surface_genome = font.render(str_genome_id, False, (0, 0, 0))
+        text_track = f"track: {CURR_TRACK}"
+        text_genome_id = f"genome id: {str(genome_id)}"
+        text_laps = f"laps: {str(cars[0].sprite.laps)}" if cars else "laps: 0"
+        text_surface_name = font.render(text_track, False, (255, 255, 255))
+        text_surface_genome = font.render(text_genome_id, False, (255, 255, 255))
+        text_surface_laps = font.render(text_laps, False, (255, 255, 255))
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -214,15 +235,22 @@ def eval_genomes(genomes, config):
 
         SCREEN.blit(TRACK, (0, 0))
         SCREEN.blit(text_surface_name, (0, 0))
-        SCREEN.blit(text_surface_genome, (0, 25))
+        SCREEN.blit(text_surface_genome, (0, 30))
+        SCREEN.blit(text_surface_laps, (0, 60))
 
-        if len(cars) == 0:
+        if not cars:
             break
 
         for i, car in enumerate(cars):
             ge[i].fitness += 1
             if not car.sprite.on_track:
                 remove(i)
+
+            if car.sprite.laps == reward_laps:
+                ge[i].fitness += 3
+                print(f"genome_id:{genome_id} won!\n")
+                remove(i)
+
 
         for i, car in enumerate(cars):
             output = nets[i].activate(car.sprite.data())
