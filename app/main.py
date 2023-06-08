@@ -2,10 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-    Formula AI
+    MAIN
 
 """
-
 
 import math
 import os
@@ -18,6 +17,7 @@ import pygame
 # os.environ["SDL_VIDEODRIVER"] = "dummy"  # Resolves pipeline error
 
 TRACK_ID = 3  # Select a track
+PATH = "Users/samuel.hernandez/FormulaAI"
 
 tracks = {
     0: "AutonomoHermanosRodriguez",
@@ -38,7 +38,7 @@ CURR_TRACK = tracks[TRACK_ID]
 pygame.font.init()  # you have to call this at the start, if you want to use this module.
 font = pygame.font.SysFont("Arial", 30)
 pygame.display.set_caption("Formula AI")
-TRACK = pygame.image.load("/Users/samuel.hernandez/FormulaAI/assets/Monza_.png")
+TRACK = pygame.image.load(f"/{PATH}/assets/Monza_.png")
 
 
 WIDTH = TRACK.get_width()
@@ -62,7 +62,7 @@ class Car(pygame.sprite.Sprite):
         )
         self.image = self.original_image
         self.rect = self.image.get_rect(center=start_pos[TRACK_ID])
-        self.vel_vector = pygame.math.Vector2(0.6, 0) # 1.2
+        self.vel_vector = pygame.math.Vector2(0.6, 0)
         self.angle = 0
         self.corner_vel = 9
         self.direction = 0
