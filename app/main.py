@@ -16,23 +16,23 @@ import pygame
 # Uncomment the line below to see the program run.
 # os.environ["SDL_VIDEODRIVER"] = "dummy"  # Resolves pipeline error
 
-TRACK_ID = 3  # Select a track
 PATH = "Users/samuel.hernandez/FormulaAI"
 
-tracks = {
-    0: "AutonomoHermanosRodriguez",
-    1: "CircuitOfTheAmericas",
-    2: "Monaco",
-    3: "Monza",
-}
+tracks = [
+    "AutonomoHermanosRodriguez",
+    "CircuitOfTheAmericas",
+    "Monaco",
+    "Monza",
+]
 
-start_pos = {
-    0: (300, 920),
-    1: (270, 930),
-    2: (270, 570),
-    3: (570, 790),
-}
+start_pos = [
+    (300, 920),
+    (270, 930),
+    (270, 570),
+    (570, 790),
+]
 
+TRACK_ID = 3
 CURR_TRACK = tracks[TRACK_ID]
 
 pygame.font.init()  # you have to call this at the start, if you want to use this module.
